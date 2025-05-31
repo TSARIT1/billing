@@ -1,0 +1,281 @@
+.bs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bs-title {
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.bs-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.bs-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.bs-tab:hover {
+  color: #2c3e50;
+}
+
+.bs-tab.active {
+  color: #3498db;
+  border-bottom-color: #3498db;
+}
+
+.bs-tab-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bs-form-section {
+  margin-bottom: 30px;
+}
+
+.bs-section-title {
+  color: #3498db;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.bs-form-group {
+  margin-bottom: 15px;
+}
+
+.bs-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+.bs-input, .bs-textarea, .bs-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+.bs-input:focus, .bs-textarea:focus, .bs-select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.bs-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.bs-checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.bs-checkbox {
+  margin-right: 10px;
+}
+
+.bs-form-actions {
+  margin-top: 30px;
+  text-align: right;
+}
+
+.bs-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s;
+}
+
+.bs-save-button {
+  background: #3498db;
+  color: white;
+}
+
+.bs-save-button:hover {
+  background: #2980b9;
+}
+
+.bs-save-button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+.bs-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.bs-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.bs-error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.bs-image-preview {
+  margin-top: 10px;
+  max-width: 200px;
+}
+
+.bs-preview-image {
+  max-width: 100%;
+  max-height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.bs-bill-design-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.bs-bill-preview {
+  margin-top: 20px;
+}
+
+.bs-bill-preview-placeholder {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  border: 1px dashed #ccc;
+  color: #777;
+  margin-top: 15px;
+  border-radius: 4px;
+}
+
+/* Form Styles */
+.bs-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.bs-form-section {
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bs-section-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bs-form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.bs-form-group {
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.bs-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.bs-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.bs-input:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+}
+
+.bs-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.bs-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.bs-save-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.bs-save-button:hover {
+  background-color: #2980b9;
+}
+
+.bs-save-button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bs-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

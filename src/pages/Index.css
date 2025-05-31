@@ -1,0 +1,132 @@
+/* Base Styles */
+.hm-container {
+  display: flex;
+  /* flex-direction: column; */
+  min-height: 100vh;
+}
+
+.hm-hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                    url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.hm-hero-overlay {
+  width: 100%;
+}
+
+.hm-hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hm-hero-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.hm-content {
+  width: 20%;
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.hm-btn-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.hm-btn button, .hm-btn-exit {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #cbcbcb;
+  color: #1a365d;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.hm-btn button:hover, .hm-btn-exit:hover {
+  background-color: #1a365d;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hm-btn-exit {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.hm-sale-info {
+  background-color: #2b6cb0;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  grid-column: 1 / -1;
+}
+
+.hm-sale-info h3 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.hm-sale-stats {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hm-hero {
+    height: 30vh;
+  }
+  
+  .hm-hero-title {
+    font-size: 2rem;
+  }
+  
+  .hm-hero-text {
+    font-size: 1rem;
+  }
+  
+  .hm-btn-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .hm-hero {
+    height: 25vh;
+  }
+  
+  .hm-hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hm-btn-group {
+    grid-template-columns: 1fr;
+  }
+  
+  .hm-btn button, .hm-btn-exit {
+    padding: 12px;
+  }
+}

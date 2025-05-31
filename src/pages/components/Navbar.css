@@ -1,0 +1,244 @@
+/* Navbar.css */
+
+/* Base Styles */
+.nv-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e50;
+  color: white;
+  padding: 0 60px;
+  height: 60px;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.nv-logo {
+  height: 40px;
+  margin-right: 20px;
+}
+
+/* Left Side - Main Navigation */
+.nv-navbar-left {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.fex-end{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Dropdown Styles */
+.nv-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.nv-dropbtn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nv-dropbtn:hover {
+  background-color: #34495e;
+}
+
+.nv-icon {
+  margin-right: 8px;
+}
+
+.nv-chevron {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.nv-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nv-dropdown:hover .nv-dropdown-content {
+  display: block;
+}
+
+.nv-dropdown-content a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  transition: background-color 0.3s;
+}
+
+.nv-dropdown-content a:hover {
+  background-color: #e0e0e0;
+}
+
+/* Profile Section */
+.nv-profile-container {
+  position: relative;
+}
+
+.nv-profile-btn {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nv-profile-btn:hover {
+  background-color: #34495e;
+}
+
+.nv-profile-icon {
+  margin-right: 8px;
+}
+
+.nv-close-icon {
+  margin-left: 8px;
+}
+
+.nv-profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  background-color: white;
+  width: 250px;
+  border-radius: 4px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  color: #333;
+}
+
+.nv-profile-header {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.nv-profile-large-icon {
+  font-size: 40px;
+  color: #7f8c8d;
+  margin-bottom: 10px;
+}
+
+.nv-profile-header span {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.nv-profile-header small {
+  color: #7f8c8d;
+  font-size: 12px;
+}
+
+.nv-profile-menu {
+  padding: 10px 0;
+}
+
+.nv-profile-menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.nv-profile-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+/* Mobile Menu Button */
+.nv-mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .nv-mobile-menu-btn {
+    display: block;
+    z-index: 101;
+  }
+
+  .nv-navbar-left {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: #2c3e50;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 60px 20px 20px;
+    transition: left 0.3s ease;
+    z-index: 100;
+  }
+
+  .nv-navbar-left.active {
+    left: 0;
+  }
+
+  .nv-dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .nv-dropbtn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nv-dropdown-content {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    background-color: #34495e;
+    display: none;
+  }
+
+  .nv-dropdown:hover .nv-dropdown-content,
+  .nv-dropdown-content.show {
+    display: block;
+  }
+
+  .nv-dropdown-content a {
+    color: white;
+    padding-left: 30px;
+  }
+
+  .nv-dropdown-content a:hover {
+    background-color: #3d566e;
+  }
+}

@@ -1,0 +1,147 @@
+/* Footer Base Styles */
+.ft-footer {
+  background-color: #002141;
+  color: #ecf0f1;
+  padding: 40px 0 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ft-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.ft-heading {
+  color: #3498db;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.ft-heading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: #3498db;
+}
+
+.ft-text {
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.ft-social {
+  display: flex;
+  gap: 15px;
+}
+
+.ft-social-link {
+  color: #ecf0f1;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.ft-social-link:hover {
+  color: #3498db;
+  transform: translateY(-3px);
+}
+
+.ft-list {
+  list-style: none;
+  padding: 0;
+}
+
+.ft-list li {
+  margin-bottom: 12px;
+}
+
+.ft-link {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.ft-link:hover {
+  color: #3498db;
+  transform: translateX(5px);
+}
+
+.ft-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.ft-contact-icon {
+  color: #3498db;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* Footer Bottom Styles */
+.ft-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.ft-copyright {
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+.ft-powered-by {
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+.ft-company {
+  color: #3498db;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .ft-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .ft-heading {
+    font-size: 1.1rem;
+  }
+
+  .ft-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .ft-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
