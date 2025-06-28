@@ -5,6 +5,7 @@ import { MdPointOfSale, MdInventory } from 'react-icons/md';
 // import dashboardImage from './images/dashboard.png'; // You'll need to add this image
 import './Home.css'
 import Header from './components/Header';
+import api from '../service/api';
 
 const HomePage = () => {
   return (

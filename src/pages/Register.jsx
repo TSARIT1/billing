@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import './auth.css';
 import Header from './components/Header';
+import {ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+import api from '../service/api'
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    shopName: '',
-    ownerName: '',
+    shop_name: '',
+    username: '',
     email: '',
-    gstNumber: '',
+    gst_number: '',
     phone: '',
     password: '',
-    confirmPassword: '',
+    confirm_password: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -22,15 +25,42 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log('Registration data:', formData);
-    setLoading(false);
-    // Add your actual registration logic here
+
+    try {
+      const res = await api.post('/api/register',formData);
+      toast.success('Registration successful! Redirecting to login...');
+      // Clear form
+      setFormData({
+        shop_name: '',
+        username: '',
+        email: '',
+        gst_number: '',
+        phone: '',
+        password: '',
+        confirm_password: '',
+      });
+      // setTimeout(() => window.location.href = '/login', 2000);
+    } catch (error) {
+      toast.error(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
     <>
+    <ToastContainer 
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     <Header />
     <div className="auth-page">
       <div className="auth-container">
@@ -44,10 +74,10 @@ const Register = () => {
             <label className="auth-label">Shop Name*</label>
             <input
               type="text"
-              name="shopName"
+              name="shop_name"
               placeholder="My Retail Shop"
               className="auth-input"
-              value={formData.shopName}
+              value={formData.shop_name}
               onChange={handleChange}
               required
             />
@@ -57,10 +87,10 @@ const Register = () => {
             <label className="auth-label">Owner Name*</label>
             <input
               type="text"
-              name="ownerName"
+              name="username"
               placeholder="Your Full Name"
               className="auth-input"
-              value={formData.ownerName}
+              value={formData.username}
               onChange={handleChange}
               required
             />
@@ -83,10 +113,10 @@ const Register = () => {
             <label className="auth-label">GST Number*</label>
             <input
               type="text"
-              name="gstNumber"
+              name="gst_number"
               placeholder="22AAAAA0000A1Z5"
               className="auth-input"
-              value={formData.gstNumber}
+              value={formData.gst_number}
               onChange={handleChange}
               required
               pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}"
@@ -119,7 +149,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="8"
+              minLength="6"
             />
           </div>
 
@@ -127,10 +157,10 @@ const Register = () => {
             <label className="auth-label">Confirm Password*</label>
             <input
               type="password"
-              name="confirmPassword"
+              name="confirm_password"
               placeholder="••••••••"
               className="auth-input"
-              value={formData.confirmPassword}
+              value={formData.confirm_password}
               onChange={handleChange}
               required
               minLength="8"

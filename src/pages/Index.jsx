@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import './Index.css';
 import Navbar from './components/Navbar';
+import api from '../service/api';
 
 function Index() {
-
 
   return (
     <>

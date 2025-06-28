@@ -242,3 +242,42 @@
     background-color: #3d566e;
   }
 }
+
+
+/* Override react-toastify toast text */
+.Toastify__toast {
+  color: white !important;
+  background-color: #333 !important; /* Dark background for contrast */
+}
+
+/* Optional: style different types individually */
+.Toastify__toast--success {
+  background-color: #074b0a !important; /* Dark green */
+  color: white !important;
+}
+
+.Toastify__toast--error {
+  background-color: #c62828 !important;
+  color: white !important;
+}
+
+.Toastify__toast--info {
+  background-color: #1565c0 !important;
+  color: white !important;
+}
+
+
+.nv-profile-menu a,
+.nv-profile-menu span {
+  text-decoration: none;
+  color: #000000;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: background 0.3s;
+}
+
+.nv-profile-menu a:hover,
+.nv-profile-menu span:hover {
+  background-color: #333;
+  color: #fff;
+}

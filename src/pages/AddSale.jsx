@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './addsale.css';
 
 const PurchaseEntry = () => {
   const navigate = useNavigate();
   const [editId, setEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
+  const [showForm, setShowForm] = useState(true);
   const [products, setProducts] = useState([]);
   const [vendors, setVendors] = useState([]);
-  const [unitTypes, setUnitTypes] = useState(['PCS', 'KG', 'L', 'M', 'BOX']);
+  const [unitTypes] = useState(['PCS', 'KG', 'L', 'M', 'BOX']);
 
   const [form, setForm] = useState({
     barcode: '',
@@ -26,33 +26,26 @@ const PurchaseEntry = () => {
     vendor: '',
   });
 
-  // Fetch vendors on component mount
+  // Fetch vendors and purchases on component mount
   useEffect(() => {
-    const fetchVendors = async () => {
-      try {
-        const response = await axios.get('/api/vendors');
-        setVendors(Array.isArray(response.data) ? response.data : response.data.vendors || []);
-      } catch (err) {
-        console.error('Error fetching vendors:', err);
-      }
-    };
-    fetchVendors();
-  }, []);
-
-  // Fetch existing purchases on component mount
-  useEffect(() => {
-    const fetchPurchases = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('/api/purchases');
-        setProducts(Array.isArray(response.data) ? response.data : []);
+        const [vendorsRes, purchasesRes] = await Promise.all([
+          axios.get('/api/vendors'),
+          axios.get('/api/purchases')
+        ]);
+        
+        setVendors(Array.isArray(vendorsRes.data) ? vendorsRes.data : vendorsRes.data.vendors || []);
+        setProducts(Array.isArray(purchasesRes.data) ? purchasesRes.data : []);
       } catch (err) {
-        setError('Failed to fetch purchases');
+        toast.error('Failed to load data');
+        console.error('Error fetching data:', err);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchPurchases();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -62,14 +55,13 @@ const PurchaseEntry = () => {
 
   const validateForm = () => {
     if (!form.productName || !form.purchasePrice || !form.quantity) {
-      setError('Product name, purchase price, and quantity are required');
+      toast.error('Product name, purchase price, and quantity are required');
       return false;
     }
     if (isNaN(form.purchasePrice) || isNaN(form.quantity)) {
-      setError('Price and quantity must be numbers');
+      toast.error('Price and quantity must be numbers');
       return false;
     }
-    setError('');
     return true;
   };
 
@@ -77,6 +69,7 @@ const PurchaseEntry = () => {
     if (!validateForm()) return;
 
     const newProduct = {
+      id: Date.now().toString(),
       barcode: form.barcode || `PRD-${Date.now()}`,
       productName: form.productName,
       purchasePrice: parseFloat(form.purchasePrice),
@@ -92,6 +85,7 @@ const PurchaseEntry = () => {
 
     setProducts([...products, newProduct]);
     resetForm();
+    toast.success('Product added to list');
   };
 
   const handleEdit = (product) => {
@@ -107,6 +101,7 @@ const PurchaseEntry = () => {
       vendor: product.vendor,
     });
     setEditId(product.id);
+    setShowForm(true);
   };
 
   const handleUpdate = () => {
@@ -128,11 +123,18 @@ const PurchaseEntry = () => {
     setProducts(updatedProducts);
     resetForm();
     setEditId(null);
+    toast.success('Product updated');
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(product => product.id !== id));
+      try {
+        await axios.delete(`/api/purchases/${id}`);
+        setProducts(products.filter(product => product.id !== id));
+        toast.success('Product deleted');
+      } catch (err) {
+        toast.error('Failed to delete product');
+      }
     }
   };
 
@@ -159,237 +161,242 @@ const PurchaseEntry = () => {
     setIsLoading(true);
     try {
       const response = await axios.post('/api/purchases', { purchases: products });
-      setSuccess('Purchases saved successfully!');
-      setProducts(response.data); // Update with any server-generated IDs
-      setTimeout(() => setSuccess(''), 3000);
+      setProducts(response.data);
+      toast.success('Purchases saved successfully!');
     } catch (err) {
-      setError('Failed to save purchases');
+      toast.error('Failed to save purchases');
     } finally {
       setIsLoading(false);
     }
   };
 
-const totalQty = Array.isArray(products)
-  ? products.reduce((sum, item) => sum + Number(item.quantity), 0)
-  : 0;
-
-const totalPurchase = Array.isArray(products)
-  ? products.reduce((sum, item) => sum + Number(item.purchasePrice), 0)
-  : 0;
-
-const grandPurchase = Array.isArray(products)
-  ? products.reduce((sum, item) => sum + (item.purchasePrice * item.quantity), 0)
-  : 0;
-
+  const totalQty = products.reduce((sum, item) => sum + Number(item.quantity), 0);
+  const totalPurchase = products.reduce((sum, item) => sum + Number(item.purchasePrice), 0);
+  const grandPurchase = products.reduce((sum, item) => sum + (item.purchasePrice * item.quantity), 0);
 
   return (
-    <div className="ad-page-container">
-      <button className="ad-close-button" onClick={() => navigate(-1)}>X</button>
-      <h2 className="ad-title">Purchase Entry</h2>
-
-      {error && <div className="ad-error">{error}</div>}
-      {success && <div className="ad-success">{success}</div>}
-
-      <div className="ad-form-grid">
-        <div className="ad-form-group">
-          <label>Barcode</label>
-          <input 
-            name="barcode" 
-            value={form.barcode} 
-            onChange={handleChange} 
-            placeholder="BarCode/Code" 
-            className="ad-input"
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Product Name*</label>
-          <input 
-            name="productName" 
-            value={form.productName} 
-            onChange={handleChange} 
-            placeholder="Product Name" 
-            className="ad-input"
-            required
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Purchase Price*</label>
-          <input 
-            name="purchasePrice" 
-            value={form.purchasePrice} 
-            onChange={handleChange} 
-            type="number" 
-            placeholder="Purchase Price" 
-            className="ad-input"
-            required
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Quantity*</label>
-          <input 
-            name="quantity" 
-            value={form.quantity} 
-            onChange={handleChange} 
-            type="number" 
-            placeholder="Purchase Qty" 
-            className="ad-input"
-            required
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Unit Type</label>
-          <select 
-            name="unitType" 
-            value={form.unitType} 
-            onChange={handleChange} 
-            className="ad-select"
+    <div className="modern-purchase-container">
+      <ToastContainer position="top-right" autoClose={3000} />
+      
+      <div className="modern-header">
+        <h2 className="modern-title">Purchase Management</h2>
+        <div className="modern-view-toggle">
+          <button 
+            onClick={() => setShowForm(true)} 
+            className={`modern-toggle-btn ${showForm ? 'active' : ''}`}
           >
-            {unitTypes.map(unit => (
-              <option key={unit} value={unit}>{unit}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="ad-form-group">
-          <label>Purchase Date</label>
-          <input 
-            name="purchaseDate" 
-            value={form.purchaseDate} 
-            onChange={handleChange} 
-            type="date" 
-            className="ad-input"
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>MRP</label>
-          <input 
-            name="mrp" 
-            value={form.mrp} 
-            onChange={handleChange} 
-            type="number" 
-            placeholder="MRP" 
-            className="ad-input"
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Sale Price</label>
-          <input 
-            name="salePrice" 
-            value={form.salePrice} 
-            onChange={handleChange} 
-            type="number" 
-            placeholder="Sale Price" 
-            className="ad-input"
-          />
-        </div>
-
-        <div className="ad-form-group">
-          <label>Vendor</label>
-          <select 
-            name="vendor" 
-            value={form.vendor} 
-            onChange={handleChange} 
-            className="ad-select"
+            Add Purchase
+          </button>
+          <button 
+            onClick={() => setShowForm(false)} 
+            className={`modern-toggle-btn ${!showForm ? 'active' : ''}`}
           >
-            <option value="">Select Vendor</option>
-            {vendors.map(vendor => (
-              <option key={vendor.id} value={vendor.name}>{vendor.name}</option>
-            ))}
-          </select>
+            View Purchases
+          </button>
         </div>
       </div>
 
-      <div className="ad-button-group">
-        {editId ? (
-          <>
-            <button onClick={handleUpdate} className="ad-button ad-update-btn">Update</button>
-            <button onClick={handleCancel} className="ad-button ad-cancel-btn">Cancel</button>
-          </>
-        ) : (
-          <button onClick={handleAdd} className="ad-button ad-add-btn">Add New</button>
-        )}
-        
-        <button onClick={handleSave} disabled={isLoading || products.length === 0} className="ad-button ad-save-btn">
-          {isLoading ? 'Saving...' : 'Save'}
-        </button>
-        
-        <button onClick={() => navigate('/')} className="ad-button ad-exit-btn">Exit</button>
-      </div>
+      {showForm ? (
+        <div className="modern-form-container">
+          <div className="modern-form-grid">
+            <div className="modern-form-group">
+              <label>Barcode</label>
+              <input 
+                name="barcode" 
+                value={form.barcode} 
+                onChange={handleChange} 
+                placeholder="BarCode/Code" 
+              />
+            </div>
 
-      <div className="ad-summary">
-        <div className="ad-summary-item">
-          <span>Total Items:</span>
-          <span>{products.length}</span>
-        </div>
-        <div className="ad-summary-item">
-          <span>Total Qty:</span>
-          <span>{totalQty}</span>
-        </div>
-        <div className="ad-summary-item">
-          <span>Avg. Purchase Price:</span>
-          <span>₹{products.length > 0 ? (totalPurchase / products.length).toFixed(2) : 0}</span>
-        </div>
-        <div className="ad-summary-item">
-          <span>Grand Total:</span>
-          <span>₹{grandPurchase.toFixed(2)}</span>
-        </div>
-      </div>
+            <div className="modern-form-group">
+              <label>Product Name*</label>
+              <input 
+                name="productName" 
+                value={form.productName} 
+                onChange={handleChange} 
+                placeholder="Product Name" 
+                required
+              />
+            </div>
 
-      {isLoading && products.length === 0 ? (
-        <div className="ad-loading">Loading purchases...</div>
+            <div className="modern-form-group">
+              <label>Purchase Price*</label>
+              <input 
+                name="purchasePrice" 
+                value={form.purchasePrice} 
+                onChange={handleChange} 
+                type="number" 
+                placeholder="Purchase Price" 
+                required
+              />
+            </div>
+
+            <div className="modern-form-group">
+              <label>Quantity*</label>
+              <input 
+                name="quantity" 
+                value={form.quantity} 
+                onChange={handleChange} 
+                type="number" 
+                placeholder="Purchase Qty" 
+                required
+              />
+            </div>
+
+            <div className="modern-form-group">
+              <label>Unit Type</label>
+              <select name="unitType" value={form.unitType} onChange={handleChange}>
+                {unitTypes.map(unit => (
+                  <option key={unit} value={unit}>{unit}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="modern-form-group">
+              <label>Purchase Date</label>
+              <input 
+                name="purchaseDate" 
+                value={form.purchaseDate} 
+                onChange={handleChange} 
+                type="date" 
+              />
+            </div>
+
+            <div className="modern-form-group">
+              <label>MRP</label>
+              <input 
+                name="mrp" 
+                value={form.mrp} 
+                onChange={handleChange} 
+                type="number" 
+                placeholder="MRP" 
+              />
+            </div>
+
+            <div className="modern-form-group">
+              <label>Sale Price</label>
+              <input 
+                name="salePrice" 
+                value={form.salePrice} 
+                onChange={handleChange} 
+                type="number" 
+                placeholder="Sale Price" 
+              />
+            </div>
+
+            <div className="modern-form-group">
+              <label>Vendor</label>
+              <select name="vendor" value={form.vendor} onChange={handleChange}>
+                <option value="">Select Vendor</option>
+                {vendors.map(vendor => (
+                  <option key={vendor.id} value={vendor.name}>{vendor.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="modern-form-actions">
+            {editId ? (
+              <>
+                <button onClick={handleUpdate} className="modern-btn update">
+                  Update Product
+                </button>
+                <button onClick={handleCancel} className="modern-btn cancel">
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button onClick={handleAdd} className="modern-btn add">
+                Add to List
+              </button>
+            )}
+          </div>
+        </div>
       ) : (
-        <div className="ad-table-container">
-          <table className="ad-product-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Barcode</th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>MRP</th>
-                <th>Purchase</th>
-                <th>Vendor</th>
-                <th>Qty</th>
-                <th>Sale Price</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((item) => (
-                <tr key={item.id || item.barcode}>
-                  <td>{item.id || '--'}</td>
-                  <td>{item.barcode}</td>
-                  <td>{item.purchaseDate}</td>
-                  <td>{item.productName}</td>
-                  <td>₹{item.mrp?.toFixed(2)}</td>
-                  <td>₹{item.purchasePrice?.toFixed(2)}</td>
-                  <td>{item.vendor || '--'}</td>
-                  <td>{item.quantity} {item.unitType}</td>
-                  <td>₹{item.salePrice?.toFixed(2)}</td>
-                  <td>
-                    <button 
-                      onClick={() => handleEdit(item)} 
-                      className="ad-action-btn ad-edit-btn"
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(item.id)} 
-                      className="ad-action-btn ad-delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="modern-table-container">
+          {isLoading ? (
+            <div className="modern-loading">Loading purchases...</div>
+          ) : (
+            <>
+              <div className="modern-table-wrapper">
+                <table className="modern-data-table">
+                  <thead>
+                    <tr>
+                      <th>Barcode</th>
+                      <th>Date</th>
+                      <th>Product Name</th>
+                      <th>Purchase Price</th>
+                      <th>MRP</th>
+                      <th>Sale Price</th>
+                      <th>Vendor</th>
+                      <th>Qty</th>
+                      <th>Total</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((item) => (
+                      <tr key={item.id || item.barcode}>
+                        <td>{item.barcode}</td>
+                        <td>{item.purchaseDate}</td>
+                        <td>{item.productName}</td>
+                        <td>₹{item.purchasePrice?.toFixed(2)}</td>
+                        <td>₹{item.mrp?.toFixed(2)}</td>
+                        <td>₹{item.salePrice?.toFixed(2)}</td>
+                        <td>{item.vendor || '--'}</td>
+                        <td>{item.quantity} {item.unitType}</td>
+                        <td>₹{(item.purchasePrice * item.quantity).toFixed(2)}</td>
+                        <td className="actions-cell">
+                          <button 
+                            onClick={() => handleEdit(item)} 
+                            className="modern-action-btn edit"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(item.id)} 
+                            className="modern-action-btn delete"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="modern-summary-cards">
+                <div className="modern-summary-card">
+                  <h3>Total Items</h3>
+                  <p>{products.length}</p>
+                </div>
+                <div className="modern-summary-card">
+                  <h3>Total Quantity</h3>
+                  <p>{totalQty}</p>
+                </div>
+                <div className="modern-summary-card">
+                  <h3>Avg. Purchase Price</h3>
+                  <p>₹{products.length > 0 ? (totalPurchase / products.length).toFixed(2) : 0}</p>
+                </div>
+                <div className="modern-summary-card highlight">
+                  <h3>Grand Total</h3>
+                  <p>₹{grandPurchase.toFixed(2)}</p>
+                </div>
+              </div>
+
+              <div className="modern-save-section">
+                <button 
+                  onClick={handleSave} 
+                  disabled={isLoading || products.length === 0} 
+                  className="modern-btn save"
+                >
+                  {isLoading ? 'Saving...' : 'Save All Purchases'}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
