@@ -68,13 +68,7 @@ const AddProduct = () => {
         api.get('/api/products/'),
       
       ]);
-      
       setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
-    
- 
-      console.log('customers data:', productsRes.data);
-
-      
     } catch (error) {
       console.error('Error fetching data:', error);
       alert('Failed to load data. Please try again.');
@@ -534,7 +528,7 @@ const AddProduct = () => {
                         key={product.id} 
                         className={`product-row ${product.stock_quantity <= (product.min_stock_level || 0) ? 'low-stock' : ''}`}
                       >
-                        <td>{product.product_code || '-'}</td>
+                        <td><i>#{product.product_code || '-'}</i></td>
                         <td className="product-name-cell">
                           <div className="product-name">{product.product_name}</div>
                           {product.barcode && (
@@ -542,7 +536,7 @@ const AddProduct = () => {
                           )}
                         </td>
                         <td>
-                          {categories.find(c => c.id === product.category) || 'N/A'}
+                          {product.category}
                         </td>
                         <td className="price-cell">
                           <div className="selling-price">${parseFloat(product.selling_price).toFixed(2)}</div>

@@ -1,67 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCloudDownloadAlt, FaCloudUploadAlt, FaDatabase, FaHistory, FaTrash } from 'react-icons/fa';
 import './databackup.css';
-
+import api from '../service/api'
 const DataBackup = () => {
   const [backupProgress, setBackupProgress] = useState(0);
   const [restoreProgress, setRestoreProgress] = useState(0);
-  const [backups, setBackups] = useState([
-    { id: 1, date: '2023-05-15 14:30', size: '45 MB', type: 'Full' },
-    { id: 2, date: '2023-05-14 09:15', size: '12 MB', type: 'Partial' },
-    { id: 3, date: '2023-05-10 18:45', size: '42 MB', type: 'Full' },
-  ]);
+  const [backups, setBackups] = useState([]);
   const [isBackingUp, setIsBackingUp] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedBackup, setSelectedBackup] = useState(null);
 
-  const handleBackup = () => {
+
+  useEffect(() => {
+    const fetchBackups = async () => {
+      try {
+        const response = await api.get('/api/backups/');
+        setBackups(response.data);
+      } catch (err) {
+        setError('Failed to fetch backups');
+        console.error('Error fetching backups:', err);
+      }
+    };
+
+    fetchBackups();
+  }, []);
+
+  
+  const handleBackup = async () => {
     setIsBackingUp(true);
     setBackupProgress(0);
+    setError(null);
     
-    const interval = setInterval(() => {
-      setBackupProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
+    try {
+      
+      const response = await api.post('/api/backups/custom_create_backup/');
+      
+      const pollInterval = setInterval(async () => {
+        try {
+          const progressResponse = await api.get(`/api/backups/status/${response.data.task_id}/`);
+          
+          setBackupProgress(progressResponse.data.progress);
+          
+          if (progressResponse.data.progress >= 100) {
+            clearInterval(pollInterval);
+            setIsBackingUp(false);
+            
+            // Refresh backup list
+            const updatedResponse = await api.get('/api/backups/');
+            setBackups(updatedResponse.data);
+          }
+        } catch (err) {
+          clearInterval(pollInterval);
           setIsBackingUp(false);
-          // Add new backup to list
-          const newBackup = {
-            id: backups.length + 1,
-            date: new Date().toLocaleString(),
-            size: `${Math.floor(Math.random() * 50) + 10} MB`,
-            type: 'Full'
-          };
-          setBackups([newBackup, ...backups]);
-          return 100;
+          setError('Failed to check backup progress');
+          console.error('Error checking backup progress:', err);
         }
-        return prev + 10;
-      });
-    }, 300);
+      }, 1000);
+    } catch (err) {
+      setIsBackingUp(false);
+      setError('Failed to start backup');
+      console.error('Error starting backup:', err);
+    }
   };
 
-  const handleRestore = (id) => {
+  const handleRestore = async (backupId) => {
+    if (!window.confirm('Are you sure you want to restore this backup? This will overwrite current data.')) {
+      return;
+    }
+
     setIsRestoring(true);
     setRestoreProgress(0);
+    setError(null);
+    setSelectedBackup(backupId);
     
-    const interval = setInterval(() => {
-      setRestoreProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
+    try {
+      // Start restore process
+      const response = await api.post(`/api/backups/${backupId}/restore/`);
+      
+      // Poll for progress
+      const pollInterval = setInterval(async () => {
+        try {
+          const progressResponse = await api.get(`/api/backups/status/${response.data.task_id}/`);
+          
+          setRestoreProgress(progressResponse.data.progress);
+          
+          if (progressResponse.data.progress >= 100) {
+            clearInterval(pollInterval);
+            setIsRestoring(false);
+            setSelectedBackup(null);
+            
+            // Optionally show success message or refresh data
+            alert('Restore completed successfully!');
+          }
+        } catch (err) {
+          clearInterval(pollInterval);
           setIsRestoring(false);
-          return 100;
+          setSelectedBackup(null);
+          setError('Failed to check restore progress');
+          console.error('Error checking restore progress:', err);
         }
-        return prev + 10;
-      });
-    }, 300);
+      }, 1000);
+    } catch (err) {
+      setIsRestoring(false);
+      setSelectedBackup(null);
+      setError('Failed to start restore');
+      console.error('Error starting restore:', err);
+    }
   };
 
-  const handleDeleteBackup = (id) => {
-    if (window.confirm('Are you sure you want to delete this backup?')) {
-      setBackups(backups.filter(backup => backup.id !== id));
+  const handleDeleteBackup = async (backupId) => {
+    if (!window.confirm('Are you sure you want to delete this backup?')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/api/backups/${backupId}/`);
+      setBackups(backups.filter(backup => backup.id !== backupId));
+    } catch (err) {
+      setError('Failed to delete backup');
+      console.error('Error deleting backup:', err);
     }
   };
 
   return (
     <div className="bd-container">
       <h1 className="bd-title"><FaDatabase /> Data Backup</h1>
+      
+      {error && <div className="bd-error">{error}</div>}
       
       <div className="bd-actions">
         <div className="bd-action-card">
@@ -126,27 +192,38 @@ const DataBackup = () => {
               </tr>
             </thead>
             <tbody>
-              {backups.map(backup => (
-                <tr key={backup.id}>
-                  <td>{backup.date}</td>
-                  <td>{backup.size}</td>
-                  <td>{backup.type}</td>
-                  <td>
-                    <button 
-                      onClick={() => handleRestore(backup.id)}
-                      className="bd-action-button bd-restore-action"
-                    >
-                      <FaCloudUploadAlt /> Restore
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteBackup(backup.id)}
-                      className="bd-action-button bd-delete-action"
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {Array.isArray(backups) && backups.length > 0 ? (
+  backups.map(backup => (
+    <tr key={backup.id}>
+      <td>{new Date(backup.created_at).toLocaleString()}</td>
+      <td>{Math.round(backup.size / (1024 * 1024))} MB</td>
+      <td>{backup.backup_type}</td>
+      <td>
+        <button 
+          onClick={() => handleRestore(backup.id)}
+          className="bd-action-button bd-restore-action"
+          disabled={isRestoring && selectedBackup === backup.id}
+        >
+          <FaCloudUploadAlt /> Restore
+        </button>
+        <button 
+          onClick={() => handleDeleteBackup(backup.id)}
+          className="bd-action-button bd-delete-action"
+          disabled={isRestoring}
+        >
+          <FaTrash /> Delete
+        </button>
+      </td>
+    </tr>
+  ))
+) : (
+  <tr>
+    <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+      No backups found
+    </td>
+  </tr>
+)}
+
             </tbody>
           </table>
         )}

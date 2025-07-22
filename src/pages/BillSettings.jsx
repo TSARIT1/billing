@@ -3,6 +3,7 @@ import { FaSave, FaPrint, FaReceipt, FaInfoCircle, FaCog, FaImage, FaSignature, 
 import axios from 'axios';
 import './billsettings.css';
 import BillDesign from './BillDesign';
+import api from '../service/api'
 
 const BillSettings = () => {
   const [activeTab, setActiveTab] = useState('billSettings');
@@ -20,7 +21,7 @@ const BillSettings = () => {
     showSignature: true,
     signatureUrl: '',
     signatureFile: null,
-    gstNumber: '',
+    gst_number: '',
     upiId: '',
     termsAndConditions: 'Goods once sold will not be taken back.',
     showCustomerDetails: true,
@@ -41,12 +42,16 @@ const BillSettings = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('/api/bill-settings');
+        const response = await api.get('/api/bill-settings/');
         setSettings(response.data);
+      console.log(response.data);
+
         if (response.data.logoUrl) setLogoPreview(response.data.logoUrl);
         if (response.data.signatureUrl) setSignaturePreview(response.data.signatureUrl);
       } catch (error) {
         setMessage({ text: 'Failed to load settings', type: 'error' });
+        console.error(error);
+        
       }
     };
     fetchSettings();
@@ -91,23 +96,21 @@ const BillSettings = () => {
       if (settings.logoFile) formData.append('logo', settings.logoFile);
       if (settings.signatureFile) formData.append('signature', settings.signatureFile);
 
-      await axios.post('/api/bill-settings', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
+      await api.post('/api/bill-settings/', formData);
+     
       setMessage({ text: 'Settings saved successfully!', type: 'success' });
       setTimeout(() => setMessage({ text: '', type: '' }), 3000);
     } catch (error) {
       setMessage({ text: 'Failed to save settings', type: 'error' });
+      console.error(error);
+      
     } finally {
       setIsLoading(false);
     }
   };
 
   const renderBillSettingsTab = () => (
-    <form onSubmit={handleSubmit} className="bs-form">
+    <form onSubmit={handleSubmit} className="bs-form" encType="multipart/form-data">
       <div className="bs-form-section">
         <h2 className="bs-section-title"><FaFileInvoice /> Bill Information</h2>
         <div className="bs-form-group">
@@ -144,8 +147,8 @@ const BillSettings = () => {
           <label>GST Number</label>
           <input
             type="text"
-            name="gstNumber"
-            value={settings.gstNumber}
+            name="gst_number"
+            value={settings.gst_number}
             onChange={handleChange}
             className="bs-input"
             placeholder="22AAAAA0000A1Z5"
