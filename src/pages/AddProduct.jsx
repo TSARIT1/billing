@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './addproduct.css';
 import api from '../service/api'
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { AiOutlineEdit } from "react-icons/ai";
+import { IoIosSearch } from "react-icons/io";
 
 const AddProduct = () => {
   const [view, setView] = useState('form'); // 'form' or 'table'
@@ -53,7 +56,7 @@ const AddProduct = () => {
     manufacturer: '',
     supplier: '',
     description: '',
-    isActive: true
+    is_active: true
   });
 
 
@@ -103,13 +106,13 @@ const AddProduct = () => {
     
     // if (!validateForm()) return;
 
-    console.log('form data from frontend : ',formData);
+   
     
 
     setIsLoading(true);
     try {
       if (isEditing) {
-        await axios.put(`/api/products/${currentProductId}`, formData);
+        await api.put(`/api/products/${currentProductId}/`, formData);
       } else {
         await api.post('/api/products/', formData);
       }
@@ -142,7 +145,7 @@ const AddProduct = () => {
       manufacturer: product.manufacturer,
       supplier: product.supplier,
       description: product.description,
-      isActive: product.isActive
+      is_active: product.is_active
     });
     setIsEditing(true);
     setCurrentProductId(product.id);
@@ -153,7 +156,7 @@ const AddProduct = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       setIsLoading(true);
       try {
-        await axios.delete(`/api/products/${id}`);
+        await api.delete(`/api/products/${id}/`);
         fetchData();
       } catch (error) {
         console.error('Error deleting product:', error);
@@ -181,7 +184,7 @@ const AddProduct = () => {
       manufacturer: '',
       supplier: '',
       description: '',
-      isActive: true
+      is_active: true
     });
     setIsEditing(false);
     setCurrentProductId(null);
@@ -434,8 +437,8 @@ const AddProduct = () => {
                 <label className="checkbox-container">
                   <input 
                     type="checkbox" 
-                    name="isActive" 
-                    checked={formData.isActive} 
+                    name="is_active" 
+                    checked={formData.is_active} 
                     onChange={handleChange} 
                   />
                   <span className="checkmark"></span>
@@ -491,7 +494,7 @@ const AddProduct = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="search-input"
                 />
-                <span className="search-icon">🔍</span>
+                <span className="search-icon"><IoIosSearch /></span>
               </div>
               <button 
                 className="btn btn-add"
@@ -549,8 +552,8 @@ const AddProduct = () => {
                           )}
                         </td>
                         <td>
-                          <span className={`status-badge ${product.isActive ? 'active' : 'inactive'}`}>
-                            {product.isActive ? 'Active' : 'Inactive'}
+                          <span className={`status-badge ${product.is_active ? 'active' : 'inactive'}`}>
+                            {product.is_active ? 'Active' : 'Inactive'}
                           </span>
                         </td>
                         <td className="action-cell">
@@ -559,14 +562,14 @@ const AddProduct = () => {
                             onClick={() => handleEdit(product)}
                             title="Edit"
                           >
-                            ✏️
+                            <AiOutlineEdit size={26} />
                           </button>
                           <button 
                             className="action-btn delete-btn"
                             onClick={() => handleDelete(product.id)}
                             title="Delete"
                           >
-                            🗑️
+                            <RiDeleteBin5Line size={23} />
                           </button>
                         </td>
                       </tr>
@@ -589,3 +592,9 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
+
+
+
+// free - limited features, upto 20 bills
+// customize - contact us

@@ -47,7 +47,7 @@ function AddVendor() {
       try {
         const response = await api.get('/api/vendors/');
         setVendors(response.data);
-        console.log(response.data);
+       
         
       } catch (err) {
         setError('Failed to fetch vendors');

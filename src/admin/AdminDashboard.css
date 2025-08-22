@@ -1,0 +1,114 @@
+.admin-dashboard {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.dashboard-header h1 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.dashboard-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.dashboard-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #7f8c8d;
+}
+
+
+/* Tabs Styles */
+.dashboard-tabs {
+  display: flex;
+
+  background: #fff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 15px 100px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-top: 3px solid transparent;
+}
+
+.tab-button:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.tab-button.active {
+  color: #3f51b5;
+  border-top: 3px solid #3f51b5;
+  background: #f8f9fa;
+}
+
+/* Adjust content area to account for fixed tabs */
+.dashboard-content {
+  padding-bottom: 60px; /* Space for the tabs */
+}
+
+/* Tab content styles */
+.tab-content {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.tab-content h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.tab-content p {
+  color: #666;
+  line-height: 1.6;
+}

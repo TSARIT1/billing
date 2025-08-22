@@ -1,0 +1,377 @@
+/* Main container */
+.sale-r-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Title */
+.sale-r-title {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+/* Loading and error states */
+.sale-r-loading,
+.sale-r-error {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.sale-r-error {
+  color: #e74c3c;
+}
+
+/* Sales list grid */
+.sale-r-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Sale card */
+.sale-r-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.sale-r-card:hover {
+  transform: translateY(-5px);
+}
+
+.sale-r-card-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #3498db;
+  color: white;
+}
+
+.sale-r-invoice {
+  font-weight: bold;
+}
+
+.sale-r-date {
+  opacity: 0.9;
+  font-size: 0.9em;
+}
+
+.sale-r-card-body {
+  padding: 15px;
+}
+
+.sale-r-customer {
+  margin-bottom: 15px;
+}
+
+.sale-r-customer-name {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.sale-r-customer-phone {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.sale-r-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sale-r-items-count {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.sale-r-total {
+  font-weight: bold;
+  color: #27ae60;
+  font-size: 1.1em;
+}
+
+.sale-r-card-footer {
+  padding: 15px;
+  border-top: 1px solid #ecf0f1;
+  text-align: right;
+}
+
+.sale-r-details-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background 0.2s;
+}
+
+.sale-r-details-btn:hover {
+  background: #2980b9;
+}
+
+/* Modal styles */
+.sale-r-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sale-r-modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sale-r-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.sale-r-modal-header h2 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.sale-r-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #7f8c8d;
+}
+
+.sale-r-modal-body {
+  padding: 20px;
+}
+
+.sale-r-customer-info {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.sale-r-customer-info h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.sale-r-items-table {
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.sale-r-items-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sale-r-items-table th,
+.sale-r-items-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.sale-r-items-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.sale-r-items-table tr:hover {
+  background: #f8f9fa;
+}
+
+.sale-r-totals {
+  margin-top: 20px;
+  width: 300px;
+  margin-left: auto;
+}
+
+.sale-r-total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.sale-r-grand-total {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #2c3e50;
+  border-bottom: none;
+  margin-top: 10px;
+}
+
+.sale-r-modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #ecf0f1;
+  text-align: right;
+}
+
+.sale-r-print-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.sale-r-close-modal-btn {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sale-r-print-btn:hover {
+  background: #2980b9;
+}
+
+.sale-r-close-modal-btn:hover {
+  background: #7f8c8d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sale-r-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .sale-r-totals {
+    width: 100%;
+  }
+}
+
+
+
+
+/* Add these new styles to your existing CSS */
+
+/* Search controls */
+.sale-r-controls {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sale-r-search {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.sale-r-search-input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.sale-r-search-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.sale-r-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8c8d;
+}
+
+/* No results message */
+.sale-r-no-results {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+  font-size: 18px;
+  grid-column: 1 / -1;
+}
+
+/* Pagination */
+.sale-r-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 5px;
+}
+
+.sale-r-pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #3498db;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.sale-r-pagination-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #3498db;
+}
+
+.sale-r-pagination-btn:disabled {
+  color: #95a5a6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.sale-r-pagination-btn.active {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+/* Loading state for pagination */
+.sale-r-loading-items {
+  opacity: 0.6;
+  position: relative;
+}
+
+.sale-r-loading-items::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}

@@ -1,16 +1,25 @@
-/* Navbar.css */
 
-/* Base Styles */
 .nv-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2c3e50;
+  background: linear-gradient(90deg,#96e6a1,#d4fc79);
   color: white;
   padding: 0 60px;
   height: 60px;
-  position: relative;
+  position: sticky;
+  top: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  #0061ff 0%, rgba(96,239,255,1) 100.7% );
+
+  /* orange */
+  background-image: radial-gradient( circle farthest-corner at -1.2% 43.9%,  rgba(252,146,32,1) 16.1%, rgba(255,4,4,1) 74.3% );
+
+  background-image: linear-gradient( 90.5deg,  rgba(112,181,176,1) 1.9%, rgba(220,244,241,1) 87.7% );
+
+  background-image: radial-gradient( circle 427px at 51.8% 56.2%,  rgba(0,122,255,1) 0%, rgba(0,51,102,1) 64.4% );
+
+  background: linear-gradient(to left,#373b44,#4286f4);
 }
 
 /* Logo */
@@ -22,14 +31,14 @@
 /* Left Side - Main Navigation */
 .nv-navbar-left {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   width: 100%;
 }
 
 .fex-end{
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 /* Dropdown Styles */
@@ -37,6 +46,13 @@
   position: relative;
   display: inline-block;
   margin-right: 15px;
+}
+
+.user_profile_pic{
+  border: 1px solid #000000;
+  width: 60%;
+  padding: 0 15px;
+  border-radius: 10%;
 }
 
 .nv-dropbtn {
@@ -53,7 +69,7 @@
 }
 
 .nv-dropbtn:hover {
-  background-color: #34495e;
+  background-color: #0061ff;
 }
 
 .nv-icon {
@@ -68,7 +84,7 @@
 .nv-dropdown-content {
   display: none;
   position: absolute;
-  right: 0;
+  right: -80px;
   background-color: #f9f9f9;
   min-width: 200px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -112,7 +128,7 @@
 }
 
 .nv-profile-btn:hover {
-  background-color: #34495e;
+  background-color: #0061ff;
 }
 
 .nv-profile-icon {

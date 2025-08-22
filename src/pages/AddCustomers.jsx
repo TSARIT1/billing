@@ -41,7 +41,7 @@ function AddCustomer() {
     try {
       const response = await api.get('/api/customers/');
       setCustomers(response.data);
-      console.log('data',response.data);
+      
       
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch customers');
@@ -59,7 +59,7 @@ function AddCustomer() {
     try {
 
       const res = await axios.post('',formData);
-      console.log('data sent backend'); 
+      
       
     } catch (error) {
       console.error(error)

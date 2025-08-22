@@ -1,18 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaBars, FaTimes, FaBox, FaFileAlt, FaChevronDown } from 'react-icons/fa';
 import './Navbar.css';
-import api from '../../service/api';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast, {Toaster} from 'react-hot-toast'
+import useUserStore from '../../store/userStore';
 
 function Navbar() {
+  const { fetchUserData, userData } = useUserStore();
+
+   useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const navbarRef = useRef(null);
 
-  const [user, setUser] = useState();
+  
+  
+
 
   const navigate = useNavigate();
 
@@ -21,25 +28,16 @@ function Navbar() {
     setProfileOpen(false);
   };
 
+
+
   const toggleProfile = () => {
     setProfileOpen(!profileOpen);
     setMobileMenuOpen(false);
   };
+  
 
-  const fetchUserData = async () => {
-    try {
-      const res = await api.get('/api/user/');
-      setUser(res.data[0]);
-      console.log(res.data);
-      
-    } catch (err) {
-      console.error("Failed to fetch user data");
-    }
-  };
+ 
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -74,7 +72,6 @@ function Navbar() {
     <>
       <div className="nv-navbar">
         <div className={`nv-navbar-left ${mobileMenuOpen ? 'active' : ''}`} ref={navbarRef}>
-          <a href="/"><img src='/path/to/logo.png' alt="Logo" className="nv-logo" /></a>
 
           <div className="fex-end">
             <div className="nv-dropdown">
@@ -82,11 +79,8 @@ function Navbar() {
                 <FaBox className="nv-icon" /> Master <FaChevronDown className="nv-chevron" />
               </button>
               <div className="nv-dropdown-content">
-                <a href="/addproduct">Products</a>
-                <a href="#">Add Logo</a>
-                <a href="#">Shipping Master</a>
-                <a href="#">Payment Type</a>
-                <a href="#">Unit Master</a>
+                <a href="/add-product">Add Products</a>       
+                <a href="/sale-list">Sale List</a>
                 <a href="/add-customer">Customers</a>
                 <a href="/addvendor">Vendors</a>
                 <a href="/bill">Bill Setting</a>
@@ -103,6 +97,21 @@ function Navbar() {
               </div>
             </div>
           </div>
+          
+        </div>
+
+        <div className="profile-center">
+          {/* <a href="/">
+          {
+                  userData.profile_photo ? (
+                    <img src={userData.profile_photo} alt="logo"  className='nv-logo'/>
+                  ) : (
+                    <>
+                    <FaUser className="nv-profile-large-icon" />
+                    </>
+                  )
+                }
+          </a> */}
         </div>
 
         <div className="nv-profile-container" ref={profileRef}>
@@ -114,13 +123,23 @@ function Navbar() {
           {profileOpen && (
             <div className="nv-profile-dropdown">
               <div className="nv-profile-header">
-                <FaUser className="nv-profile-large-icon" />
-                <span> {user?.username} </span>
-                <small>{user?.email}</small>
+                
+                {
+                  userData.profile_photo ? (
+                    <img src={userData.profile_photo} alt={userData.shop_name} className='user_profile_pic'/>
+                  ) : (
+                    <>
+                    <FaUser className="nv-profile-large-icon" />
+                    </>
+                  )
+                }
+                <span> {userData?.username} </span>
+                <small>{userData?.email}</small>
               </div>
               <div className="nv-profile-menu">
-                <a href="/profile">Account Settings</a>
-                <span onClick={handleLogout}>Log out</span>
+                <a href="/bill-settings">Account Settings</a>
+                <a href="/ticket-raise">Ticket Raise</a>
+                <span onClick={handleLogout} style={{display:'block'}}>Log out</span>
               </div>
             </div>
           )}
@@ -130,7 +149,7 @@ function Navbar() {
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+      <Toaster position="top-center" />
     </>
   );
 }

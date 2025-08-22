@@ -3,8 +3,9 @@ import './auth.css';
 import Header from './components/Header';
 import api from '../service/api';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import toast, { Toaster } from 'react-hot-toast'
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -23,71 +24,103 @@ const Login = () => {
     }));
   };
 
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
+  // Clear existing tokens
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+  
+  // Show loading toast
+  const toastId = toast.loading('Logging in...');
+
+  try {
+    const res = await api.post('/api/login/', {
+      email: formData.email,
+      password: formData.password
+    });
+
     
-    try {
-      const res = await api.post('/api/login/', {
-        email: formData.email,
-        password: formData.password
-      });
-      
-      localStorage.removeItem('token');
-      sessionStorage.removeItem('token');
-      
-      if (formData.rememberMe) {
-        localStorage.setItem("token", res.data.access);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-      } else {
-        sessionStorage.setItem('token', res.data.access);
-        sessionStorage.setItem('user', JSON.stringify(res.data.user));
-      }
-      
-      toast.success('Login successful! Redirecting...');
-      setTimeout(() => navigate('/main'), 1500);
-      
-    } catch (error) {
-      console.log(error);
-      
-      let errorMessage = 'Login failed. Please try again.';
-      
-      if (error.response) {
-        if (error.response.status === 401) {
-          localStorage.removeItem('token')
-          errorMessage = 'Invalid email or password';
-        } else if (error.response.status === 404) {
-          errorMessage = 'User not found. Please register.';
-        } else if (error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
-        }
-      }
-      
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+
+    const token = res.data.access;
+    const user = res.data.user;
+
+    // Store token based on rememberMe
+    if (formData.rememberMe) {
+      localStorage.setItem("token", token);
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('user', JSON.stringify(user));
     }
-  };
+
+    // Update toast to success
+    toast.success('Login successful! Redirecting...', { id: toastId });
+
+    setTimeout(() => {
+      if (user?.is_active) {
+        navigate('/main');
+      } else if (user?.is_active === false) {
+        navigate('/expired');
+      } else {
+        toast.error("Unexpected login response. Please try again.", { id: toastId });
+      }
+    }, 1500);
+
+  } catch (error) {
+    console.error('Login error:', error);
+
+    let errorMessage = 'Login failed. Please try again.';
+    let shouldNavigate = false;
+    let navigateTo = '';
+
+    if (error.response) {
+      if (error.response.status === 401) {
+        errorMessage = 'Invalid email or password';
+        // Clear existing tokens
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+      } else if (error.response.status === 404) {
+        errorMessage = 'User not found. Please register.';
+        shouldNavigate = true;
+        navigateTo = '/register';
+      } else if (error.response.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      // Handle specific Django error
+      if (error.response.data?.non_field_errors?.[0] === 'Unable to log in with provided credentials.') {
+        errorMessage = 'Invalid credentials or inactive account';
+      }
+    }
+
+    // Update toast to error
+    toast.error(errorMessage, { 
+      id: toastId,
+      duration: 4000 
+    });
+
+    // Navigate if user not found
+    if (shouldNavigate) {
+      setTimeout(() => navigate(navigateTo), 2000);
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
       <Header />
-      <ToastContainer 
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <Toaster position="bottom-center" reverseOrder={false}/>
+
       <div className="auth-page">
         <div className="auth-container">
           <div className="auth-header">
-            <h1 className="auth-logo">RetailPro</h1>
+            <h1 className="auth-logo">Billing Software</h1>
             <p className="auth-subtitle">Shop Owner Portal</p>
           </div>
 

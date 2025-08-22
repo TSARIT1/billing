@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './auth.css';
 import Header from './components/Header';
-import {ToastContainer,toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import api from '../service/api'
+import toast, {Toaster} from 'react-hot-toast'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const Register = () => {
     phone: '',
     password: '',
     confirm_password: '',
+    referred_by:''
   });
   const [loading, setLoading] = useState(false);
 
@@ -22,50 +23,59 @@ const Register = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Show loading toast immediately
+  const toastId = toast.loading('Registering your account...');
+  setLoading(true);
 
-    try {
-      const res = await api.post('/api/register',formData);
-      toast.success('Registration successful! Redirecting to login...');
-      // Clear form
-      setFormData({
-        shop_name: '',
-        username: '',
-        email: '',
-        gst_number: '',
-        phone: '',
-        password: '',
-        confirm_password: '',
-      });
-      // setTimeout(() => window.location.href = '/login', 2000);
-    } catch (error) {
-      toast.error(error.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-
-  };
+  try {
+    const res = await api.post('/api/register/', formData);
+    
+    // Update to success state
+    toast.success('Registered successfully! Redirecting to login...', {
+      id: toastId,
+      duration: 2000
+    });
+    
+    // Clear form
+    setFormData({
+      shop_name: '',
+      username: '',
+      email: '',
+      gst_number: '',
+      phone: '',
+      password: '',
+      confirm_password: '',
+      referred_by: ''
+    });
+    
+    // Redirect after 2 seconds
+    setTimeout(() => window.location.href = '/login', 2000);
+    
+  } catch (error) {
+    // Update to error state
+    toast.error(error.response?.data?.message || 'Registration failed. Please try again.', {
+      id: toastId
+    });
+    
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
-    <ToastContainer 
+    <Toaster 
         position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        reverseOrder={false}
       />
     <Header />
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1 className="auth-logo">RetailPro</h1>
+          <h1 className="auth-logo">Billing Software</h1>
           <p className="auth-subtitle">Register Your Shop</p>
         </div>
 
@@ -129,7 +139,7 @@ const Register = () => {
             <input
               type="tel"
               name="phone"
-              placeholder="9876543210"
+              placeholder="+91 00000 00000"
               className="auth-input"
               value={formData.phone}
               onChange={handleChange}
@@ -164,6 +174,22 @@ const Register = () => {
               onChange={handleChange}
               required
               minLength="8"
+            />
+          </div>
+
+          <div className="auth-input-group">
+            <label htmlFor="referred_by" className="auth-label">
+              Referred By
+            </label>
+            <input
+              id="referred_by"
+              type="text"
+              name="referred_by"
+              placeholder="Enter referrer's full name"
+              className="auth-input"
+              value={formData.referred_by}
+              onChange={handleChange}
+              required
             />
           </div>
 

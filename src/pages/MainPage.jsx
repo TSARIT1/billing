@@ -1,11 +1,10 @@
 import React from 'react';
 import { FaShoppingCart, FaChartLine, FaUsers, FaBoxes, FaFileInvoice, FaMobileAlt, FaShieldAlt, FaRupeeSign } from 'react-icons/fa';
 import { MdPointOfSale, MdInventory } from 'react-icons/md';
-// import posImage from './images/pos-screen.png'; // You'll need to add this image
-// import dashboardImage from './images/dashboard.png'; // You'll need to add this image
 import './Home.css'
 import Header from './components/Header';
 import api from '../service/api';
+import PriceComponent from './components/PriceComponent';
 
 const HomePage = () => {
   return (
@@ -48,6 +47,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+
+      <PriceComponent />
 
       {/* Features Section */}
       <section className="features-section">
@@ -97,6 +99,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+
 
       {/* Usage Section */}
       <section className="usage-section">
@@ -181,3 +185,9 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+
+
+
+
