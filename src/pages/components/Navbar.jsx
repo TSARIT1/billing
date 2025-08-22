@@ -81,6 +81,7 @@ function Navbar() {
               <div className="nv-dropdown-content">
                 <a href="/add-product">Add Products</a>       
                 <a href="/sale-list">Sale List</a>
+                <a href="/upload">Upload Products</a>
                 <a href="/add-customer">Customers</a>
                 <a href="/addvendor">Vendors</a>
                 <a href="/bill">Bill Setting</a>
